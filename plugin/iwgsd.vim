@@ -4,8 +4,7 @@
 hi default IWGSD_Todo         ctermfg=225 ctermbg=57 cterm=bold
 hi default IWGSD_Tag          ctermfg=45  ctermbg=21 cterm=bold
 hi default IWGSD_Location     ctermfg=190
-hi default IWGSD_Date         ctermfg=140
-hi default IWGSD_Time         ctermfg=146
+hi default IWGSD_Notification ctermfg=141
 hi default IWGSD_Task         ctermfg=240            cterm=bold,italic
 hi default IWGSD_TaskDone     ctermfg=124            cterm=bold,italic
 hi default IWGSD_TaskDoneText ctermfg=244            cterm=italic

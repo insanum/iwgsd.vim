@@ -18,20 +18,31 @@ function! iwgsd#enable()
         return
     endif
 
-    " match a markdown list item
-    let l:list = '\v%(^\s*%([-*+]|\d+.)%(\s+[\[ x\]])?\s+.*)@<='
+    " match into any kind of markdown list item
+    let l:ml = '\v%(^\s*%([-*+]|\d+.)%(\s+[\[ x\]])?\s+.*)@<='
 
+    " match the beginning of a markdown list task item (before brackets)
+    let l:mlt = '\v%(^\s*[-*+]\s+'
+
+    " ensure a preceding space
+    let l:ms = '\s@1<='
+
+    " match notification string
+    let l:nd = '[-+]?' " notify prefix flags
+    let l:nt = '.*'    " notify datetime text (based on later.js)
+
+    " match end being a space or eol
+    let l:me = '%(\s|$)'
+
+    " note that order matters allowing matches on top of matches...
     let l:matches = [
-    \   [ 'IWGSD_Todo',         l:list.'\s@1<=(TODO|XXX)(\s@=|$)' ],
-    \   [ 'IWGSD_Tag',          l:list.'\s@1<=#(\w+)(\s@=|$)' ],
-    \   [ 'IWGSD_Location',     l:list.'\s@1<=\@(\w+)(\s@=|$)' ],
-    \   [ 'IWGSD_Date',         l:list.'\s@1<=\d{4}-\d{2}-\d{2}(\s@=|$)' ],
-    \   [ 'IWGSD_Time',         l:list.'\s@1<=\d{2}:\d{2}(\s@=|$)' ],
-    \   [ 'IWGSD_Task',         '\v%(^\s*[-*+]\s+)@<=\[%([ x]\]\s+)@=' ],
-    \   [ 'IWGSD_Task',         '\v%(^\s*[-*+]\s+\[[ x])@<=\]%(\s+)@=' ],
-    \   [ 'IWGSD_TaskDone',     '\v%(^\s*[-*+]\s+\[)@<=x%(\]\s+)@=' ],
-    \   [ 'IWGSD_TaskDone',     '\v%(^\s*[-*+]\s+\[)@<=x%(\]\s+)@=' ],
-    \   [ 'IWGSD_TaskDoneText', '\v%(^\s*[-*+]\s+\[x\]\s+)@<=.*$' ],
+    \   [ 'IWGSD_Todo',         l:ml.l:ms.'\zs%(TODO|XXX)\ze'.l:me ],
+    \   [ 'IWGSD_Tag',          l:ml.l:ms.'\zs#%(\w+)\ze'.l:me ],
+    \   [ 'IWGSD_Location',     l:ml.l:ms.'\zs\@%(\w+)\ze'.l:me ],
+    \   [ 'IWGSD_Notification', l:ml.l:ms.'\zs\{'.l:nd.'\s+'.l:nt.'}\ze'.l:me ],
+    \   [ 'IWGSD_Task',         l:mlt.')\zs\[[ x]\]\ze\s+' ],
+    \   [ 'IWGSD_TaskDone',     l:mlt.'\[)\zsx\ze\]\s+' ],
+    \   [ 'IWGSD_TaskDoneText', l:mlt.'\[x\]\s+)\zs.+\ze$' ],
     \ ]
 
     let w:iwgsd_matches = [ ]
