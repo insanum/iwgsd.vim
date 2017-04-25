@@ -29,7 +29,7 @@ function! iwgsd#enable()
 
     " match notification string
     let l:nd = '[-+]?' " notify prefix flags
-    let l:nt = '.*'    " notify datetime text (based on later.js)
+    let l:nt = '.+'    " notify datetime text (based on later.js)
 
     " match end being a space or eol
     let l:me = '%(\s|$)'

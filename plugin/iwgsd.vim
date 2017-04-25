@@ -16,3 +16,24 @@ command! -bar IWGSDToggle  call iwgsd#toggle()
 command! -nargs=1 -bang -bar FindTag call iwgsd#find_tag(<bang>0, <f-args>)
 command! -bang -bar ListTags call iwgsd#list_tags(<bang>0)
 
+inoremap xxn <C-R>=IWGSDNotifications()<CR>
+function! IWGSDNotifications()
+    call complete(col('.'),
+        \ [
+        \   "{+ at <T>}",
+        \   "{+ at <T> of <D> day of <M>}",
+        \   "{+ at <T> on <WD>}",
+        \   "{+ at <T> every weekend}",
+        \   "{+ at <T> before <D> day of <M>}",
+        \   "{+ at <T> on the first day of the month}",
+        \   "{+ at <T> on the last day of the month}",
+        \   "{+ at <T> every <N> <P> starting on the <D> day of <M>}",
+        \ ])
+    return ''
+endfunction
+
+command! -bar IWGSDDeleteNotification s/\v\{[-+]?\s+.+}//g
+command! -bar IWGSDDeleteTags         s/\v\s@1<=#\w+%(\s|$)//g
+command! -bar IWGSDDeleteLocation     s/\v\s@1<=\@\w+%(\s|$)//g
+command! -bar IWGSDDeleteTodo         s/\v\s@1<=%(TODO|XXX)%(\s|$)//g
+
